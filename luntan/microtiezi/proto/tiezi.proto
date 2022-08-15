@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package microtiezi;
+
+option go_package = "./proto;microtieiz";
+
+service TieziService {
+	rpc Create(Createtieziquest) returns (CreatetieziResponse) {}
+	rpc Get(Tiezigetrequest) returns (Tiezigetresponse) {}
+	rpc List(Tiezilistrequest) returns (TiezilistResponse) {}
+	rpc Createpinglun(Createtiezipinglunquest) returns (CreatetiezipinglunResponse) {}
+	rpc Listpinglun(Tiezipinglunlistrequest) returns (TiezipinglunlistResponse) {}
+}
+
+// *gorm.Model
+// 	Userid     string `json:"userid" form:"userid"`
+// 	Content    string `json:"content" form:"content"`
+// 	Title      string `json:"title" form:"title"`
+// 	Photourl   string `json:"photourl" form:"photourl"`
+// 	Dianzanshu int    `json:"dianzanshu" form:"dianzanshu"`
+message Tiezigetrequest {
+	int64 id = 1;
+	int64 userid=2;
+}
+
+
+message Tiezigetresponse {
+	int64 id = 1;
+	int64 userid=2;
+	string content =3;
+	string title=4;
+	string photourl=5;
+	int64 dianzanshu=6;
+}
+message Createtieziquest {
+	int64 userid=2;
+	string content =3;
+	string title=4;
+	string photourl=5;
+	int64 dianzanshu=6;
+}
+
+message CreatetieziResponse {
+	int64 id = 1;
+	int64 flag = 2;//是否成功
+}
+
+message Tiezilistrequest{
+  int64 pageoffset =1;
+}
+
+message TiezilistResponse {
+	message List{
+		int64 id = 1;
+	int64 userid=2;
+	string content =3;
+	string title=4;
+	string photourl=5;
+	int64 dianzanshu=6;
+	}
+	repeated List list=1;
+}
+
+// *gorm.Model
+// 	Postid  string `json:"postid" form:"postid" binding:"required"`
+// 	Time    string `json:"time" form:"time"`
+// 	Uid     int    `json:"uid" form:"uid"`
+// 	Content string `json:"content" form:"content"`
+message Createtiezipinglunquest {
+	string content =1;
+	int64 postid=2;
+	int64 uid=3;
+}
+
+message CreatetiezipinglunResponse {
+	int64 flag = 1;//是否成功
+}
+
+message Tiezipinglunlistrequest{
+  int64 page =1;
+  int64 postid =2;
+}
+
+message TiezipinglunlistResponse {
+	message List{
+		string content =1;
+	int64 postid=2;
+	int64 uid=3;
+	int64 id=4;
+	}
+	repeated List list=1;
+}
+
+

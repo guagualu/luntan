@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package microuser;
+
+option go_package = "./proto;microuser";
+
+service UserService {
+	rpc Create(Createequest) returns (CreateResponse) {}
+	rpc Get(Usergetrequest) returns (Usergetresponse) {}
+	rpc Update(Updaterequest) returns (Updateresponse) {}
+	rpc Paihang(Userpaihangrequest) returns (Userpaihangresponse) {}
+	rpc Dengluget(Userdenglugetrequest) returns (Userdenglugetresponse) {}
+}
+
+
+message Usergetrequest {
+	string name = 1;
+	int64 id=2;
+	string password =3;
+	string mail =4;
+	string photourl =5;
+
+}
+
+message Usergetresponse {
+	string name = 1;
+	int64 id=2;
+	string password =3;
+	string mail =4;
+	string photourl =5;
+	int64 dianzanshu =6;
+}
+message Userdenglugetrequest {
+	string name = 1;
+	int64 id=2;
+	string password =3;
+	string mail =4;
+	string photourl =5;
+
+}
+
+message Userdenglugetresponse {
+	string name = 1;
+	int64 id=2;
+	string password =3;
+	string mail =4;
+	string photourl =5;
+	int64 dianzanshu =6;
+}
+
+
+
+message Createequest {
+	string name = 1;
+	int64 id=2;
+	string password =3;
+	string mail =4;
+	string photourl =5;
+
+}
+
+message CreateResponse {
+	int64 flag = 1;//是否成功
+	int64 id = 2;//创建的id
+}
+
+message Updaterequest {
+	string name = 1;
+	int64 id=2;
+	string password =3;
+	string mail =4;
+	string photourl =5;
+
+}
+
+message Updateresponse {
+	string name = 1;
+	int64 id=2;
+	string password =3;
+	string mail =4;
+	string photourl =5;
+
+}
+
+
+message  Userpaihangrequest {
+	int64 page=1;
+}
+message  Userpaihangresponse {
+	message List{
+		string name = 1;
+	int64 id=2;
+	string mail =3;
+	string photourl =4;
+	int64 dianzanshu=5;
+	}
+	repeated List list=1;
+}

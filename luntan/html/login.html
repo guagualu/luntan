@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>登陆界面</title>
+  <link href="/home/gua/go/src/luntan/front/layui/css/layui.css" rel="stylesheet">
+</head>
+<body background="http://127.0.0.1:8081/storage/uploads/pink-flowers.webp">
+  <!-- 设置背景 -->
+   <h1>  hello</h1>
+<!-- 你的 HTML 代码 -->
+ <!-- name 必须是和后端对应的json一致 -->
+<script src="/home/gua/go/src/luntan/front/layui/layui.js"></script>
+<script src="/home/gua/go/src/luntan/front/layui/global.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<div class="layui-row">
+  <div class="layui-col-md4   layui-col-md-offset4">
+    <h1   style="font-size: 30px; color: #2319af;">登陆界面</h1>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+  </div>
+</div>
+
+   <div class="layui-main">
+    <form enctype="multipart/form-data" class="layui-form" action="" method="post" id="userinfo">
+  <div class="layui-form-item">
+    <label class="layui-form-label">id</label>
+    <div class="layui-input-block">
+      <input type="text" name="ID" required  lay-verify="required" placeholder="请输入id" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">密码</label>
+    <div class="layui-input-inline">
+      <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit lay-filter="formDemo" id="tijiao"  >立即登陆</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button><a href="registerhtml">注册界面</a>
+    </div>
+  </div>
+</form>
+   </div>
+
+
+<script>
+    
+    layui.use(['jquery','form'], function(){//使用jqury 
+        var formdata;
+        var form=layui.form;   
+        form.on('submit(formDemo)', function(data){
+        console.log(data.elem); //被执行事件的元素DOM对象，一般为button对象
+        console.log(data.form); //被执行提交的form对象，一般在存在form标签时才会返回
+        console.log(data.field); //当前容器的全部表单字段，名值对形式：{name: value}
+        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。********************************
+        formdata=data.form
+
+    });
+         $('#tijiao').click(function(){
+             console.log('在这1');
+            //  console.log(formData)
+             $.ajax({
+                //  cache:true,
+                processData: false,//这个必须有，不然会报错
+        contentType: false,//这个必须有，不然会报错
+                 type:"GET",
+                 url:"login",
+                 data:$('#userinfo').serialize(),
+                 error:function(request){//利用回调
+                       console.log('提交后端失败')
+                       alert("登陆失败 密码或id错误")
+                 },
+                 success:function(data){
+                     console.log('提交后端成功',data.id)
+                     global.token=data.token;
+                     global.nowloginid=data.id
+                     $.cookie("token",data.token,{expires: 7}) ;
+                     $.cookie("loginuid",data.id,{expires: 7}) ;
+                     console.log($.cookie("loginuid"))
+                     alert("登陆成功")
+                     location.href="luntan"
+                 }
+             })
+             console.log($('#userinfo').serialize());
+         })
+
+ 
+
+
+
+ 
+
+});
+</script>
+<script>
+  var x=1;
+  console.log(x)
+  console.log("后面")
+  
+</script> 
+</body>
+</html>

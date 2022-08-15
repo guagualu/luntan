@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>关注列表</title>
+  <link href="/home/gua/go/src/luntan/front/layui/css/layui.css" rel="stylesheet">
+</head>
+<body background="http://127.0.0.1:8081/storage/uploads/leaves.webp">
+   <h1>  hello</h1>
+<!-- 你的 HTML 代码 -->
+ 
+<script src="/home/gua/go/src/luntan/front/layui/layui.js"></script>
+<script src="/home/gua/go/src/luntan/front/layui/global.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <!-- layuithis代表当前  href 跳转？ -->
+    <ul class="layui-nav" lay-filter="">
+    <li class="layui-nav-item"><a href="luntan">论坛</a></li>
+    <li class="layui-nav-item "><a href="owner">个人中心</a></li>
+    <li class="layui-nav-item layui-this"><a href="guanzhulist">关注列表</a></li>
+    <li class="layui-nav-item"><a href="paihang">排行榜</a></li>
+    <li class="layui-nav-item">
+      <a href="javascript:;">用户</a>
+      <dl class="layui-nav-child"> <!-- 二级菜单 -->
+        <dd><a href="loginhtml">退出登陆</a></dd>
+      </dl>
+    </li>
+  </ul>
+
+  <div class="layui-row">
+    <div class="layui-col-md3 layui-col-md-offset6">
+      关注列表模块
+      </div>
+  </div>
+  <div class="layui-row">
+    <table id="theguanzhulist" lay-filter="test">
+    </table>
+  </div>
+  <script>
+  //注意：导航 依赖 element 模块，否则无法进行功能性操作
+  layui.use('element', function(){
+    var element = layui.element;
+    
+    //…
+  });
+  </script>
+ <script>
+    //加载评论
+    layui.use(['table'], function(){
+      var table = layui.table;
+    $(document).ready(function(){
+      var guanzhulistdata={
+        uid:$.cookie("loginuid"),
+      }
+      $.ajax({
+                  //  cache:true,
+                   type:"GET",
+                   url:"logined/guanzhulist?Authorization="+$.cookie("token"),
+                   data:guanzhulistdata,
+                   error:function(request){//利用回调
+                         console.log('关注提交后端失败')
+                   },
+                   success:function(data){
+                       console.log('关注提交后端成功',data);
+  
+                      //  console.log('data.tiezipinglunList[0]',data.tiezipinglunList[0])
+                       table.render({
+                   elem: '#theguanzhulist'//绑定html
+                ,height: 700
+          // ,url: '/logined/tiezilist' //数据接口
+                 ,data:data.data
+               ,page: true, //开启分页
+               cols: [[ //表头
+            {field: 'ID', title: '用户ID', width:80, sort: true, fixed: 'left',width:'15%'},
+            {field: 'name', title: '用户昵称', width:80, sort: true, fixed: 'left',width:'15%'},
+            {field: 'mail', title: '用户邮箱', width:80, sort: true, fixed: 'left',width:'15%'},
+            {field: 'dianzanshu', title: '用户点赞书', width:80, sort: true, fixed: 'left',width:'15%'},
+          ]],
+        });
+                   }
+               })
+               
+    
+    })
+    
+  })
+    
+  </script>   
+   
+
+<script>
+  var x=1;
+  console.log(x)
+  console.log("后面")
+  
+</script> 
+</body>
+</html>

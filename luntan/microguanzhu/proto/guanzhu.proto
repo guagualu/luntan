@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package microguanzhu;
+
+option go_package = "./proto;microguanzhu";
+
+service GuanzhuService {
+	rpc Create(Createequest) returns (CreateResponse) {}
+	rpc Get(Guanzhugetrequest) returns (Guanzhugetresponse) {}
+	rpc Delete(Guanzhudeletrequest) returns (Guanzhudeleteresponse) {}
+	rpc List(Guanzhulistrequest)  returns(Guanzhulistresponse){}
+}
+
+
+message Guanzhugetrequest {
+	int64 uid=1;
+	int64 followid=2;
+
+}
+
+message Guanzhugetresponse {
+	int64 uid=1;
+	int64 followid=2;
+	int64 id=3;
+	int64 status=4;
+	int64 flag=5;//1为有记录 2为无记录 
+}
+message Createequest {
+	int64 uid=1;
+	int64 followid=2;
+	int64 status=4;
+
+}
+
+message CreateResponse {
+	int64 flag = 1;//是否成功
+}
+
+message Guanzhulistrequest {
+	int64 uid=1;
+	int64 page=2;
+}
+
+message Guanzhulistresponse {
+	message List{
+		int64 uid=1;
+		int64 followid=2;
+		int64 id=3;
+		int64 status=4;
+	}
+	repeated List list=1;
+}
+
+message Guanzhudeletrequest {
+	int64 uid=1;
+	int64 followid=2;
+}
+
+message Guanzhudeleteresponse {
+	int64 flag=1;
+}

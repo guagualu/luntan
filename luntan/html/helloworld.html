@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>开始使用 layui</title>
+  <link href="layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+   <h1>  hello</h1>
+<!-- 你的 HTML 代码 -->
+ 
+<script src="layui/layui.js"></script>
+<script>
+layui.use(['layer', 'form'], function(){//会直接use？
+  var layer = layui.layer;
+  var form = layui.form;
+  console.log("在前面")
+  
+  layer.msg('Hello World');
+
+});
+</script> 
+<script>
+  var x=1;
+  console.log(x)
+  console.log("后面")
+  
+</script> 
+</body>
+</html>

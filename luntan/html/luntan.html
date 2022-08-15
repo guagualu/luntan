@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>大厅</title>
+  <link href="/home/gua/go/src/luntan/front/layui/css/layui.css" rel="stylesheet">
+</head>
+<body background="http://127.0.0.1:8081/storage/uploads/leaves.webp">
+   <h1>  hello</h1>
+<!-- 你的 HTML 代码 -->
+ 
+<script src="/home/gua/go/src/luntan/front/layui/layui.js"></script>
+<script src="/home/gua/go/src/luntan/front/layui/global.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<form enctype="multipart/form-data" class="layui-form" action="" method="post" id="createtiezihtml" style="display:none">
+  <div class="layui-form-item" style="display:none">
+    <label class="layui-form-label">用户id</label>
+    <div class="layui-input-block">
+      <input type="text" name="userid" required   placeholder="请输入你的标题" autocomplete="off" class="layui-input" id="createuserid">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">帖子标题</label>
+    <div class="layui-input-block">
+      <input type="text" name="title" required  lay-verify="required" placeholder="请输入你的标题" autocomplete="off" class="layui-input" id="createtitle">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">帖子内容</label>
+    <div class="layui-input-block">
+      <input type="text" name="content" required  lay-verify="required" placeholder="请输入你的评论" autocomplete="off" class="layui-input" id="createcontent">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+        <button type="button" class="layui-btn" id="photo">
+            <i class="layui-icon">&#xe67c;</i>上传图片
+          </button>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit lay-filter="formDemo" id="tijiao"  >立即提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+</form>
+<ul class="layui-nav" lay-filter="">
+    <!-- layuithis代表当前  href 跳转？ -->
+    <li class="layui-nav-item layui-this"><a href="luntan">论坛</a></li>
+    <li class="layui-nav-item "><a href="owner">个人中心</a></li>
+    <li class="layui-nav-item"><a href="guanzhulist">关注列表</a></li>
+    <li class="layui-nav-item"><a href="paihang">排行榜</a></li>
+    <li class="layui-nav-item">
+      <a href="javascript:;">用户</a>
+      <dl class="layui-nav-child"> <!-- 二级菜单 -->
+        <dd><a href="loginhtml">退出登陆</a></dd>
+      </dl>
+    </li>
+  </ul>
+
+  <div class="layui-row">
+    <div class="layui-col-md3 layui-col-md-offset6">
+      <h1 style="font-size: 30px; color: #af8c19;">帖子模块</h1>
+      </div>
+      <div class="layui-col-md3 layui-col-md-offset9" >
+        <button type="button" class="layui-btn" id="createtiezi">创建帖子</button>
+        </div>
+  </div>
+  <div class="layui-row">
+    <table id="demo" lay-filter="test">
+
+    </table>
+  </div>
+  <script>
+  //注意：导航 依赖 element 模块，否则无法进行功能性操作
+  layui.use('element', function(){
+    var element = layui.element;
+    
+    //…
+  });
+  </script>
+  <script>
+    layui.use(['table','jquery'], function(){
+      var table = layui.table;
+      var token=$.cookie("token")
+      if(typeof(token)=="undefined"){
+          return 
+      }
+      else{
+        console.log(token)
+      }
+      //第一个实例
+      table.render({
+        elem: '#demo'//绑定html
+        ,height: 'full-20'
+        ,url: '/logined/tiezilist'+'?Authorization='+token //数据接口
+        ,page: true, //开启分页
+        lineStyle: 'height: 95px;'
+        ,pagebar: '#pagebarDemo', // 分页栏模板所在的选择器
+        cols: [[ //表头
+          {field: 'userid', title: '用户ID', width:80, sort: true, fixed: 'left',width: '30%'},
+          {field: 'id', title: '文章ID', width:80, sort: true, fixed: 'left',width: '30%'},
+          {field: 'title', title: '标题', width:80, sort: true, fixed: 'left',width: '30%'},
+          
+        ]],parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+            console.log(res.data)
+        
+      return {
+        "code": res.code, //解析接口状态   就是后端传过来的字段名
+        "msg": res.msg, //解析提示文本
+        "count": res.count, //解析数据长度
+        "data": res.data //解析数据列表
+      };
+    }
+        
+      });
+      // 分页栏事件
+      //触发行单击事件
+table.on('row(test)', function(obj){
+  console.log(obj.tr) //得到当前行元素对象
+  console.log(obj.data.userid) //得到当前行数据
+  //obj.del(); //删除当前行
+  //obj.update(fields) //修改当前行数据
+  $.cookie("nowtiezi",obj.data.id,{expires: 7})
+  $.cookie("nowtieziuid",obj.data.userid,{expires: 7})
+  location.href="tiezi"
+
+  
+});
+    });
+    </script>
+    
+    <script>
+      //弹出层上传照片
+      layui.use('upload', function(){
+        var upload = layui.upload;
+         
+        //执行实例
+        var uploadInst = upload.render({
+          elem: '#photo' //绑定元素  上面id为test1的 前面加#是因为他是id
+          // ,url: '127.0.0.1:8080/register1' //上传接口
+          ,done: function(res){
+             alert("上传成功")
+          }
+          ,error: function(){
+             alert("上传失败")
+          },
+          auto:false,//不自动上传 而是配合bindaction 才正式上传
+          // bindAction:"#tijiao"
+        });
+      });
+      </script>
+  <script>
+    //点击创建帖子事件
+    layui.use(['layer'], function(){//使用jqury 
+    var layer=layui.layer
+    $('#createtiezi').click(function(){
+      alert("开始创建帖子")
+  layer.open({
+   type:1,
+   area:['500px','600px'],
+    title: '创建帖子'
+    ,content: $("#createtiezihtml"),
+    shade: 0,
+  cancel: function(layero,index){ 
+     layer.closeAll();
+    }
+  
+  }); 
+  
+  
+    
+    })
+  })
+  </script>
+
+  <script>
+    //创建帖子的表单提交
+    layui.use(['jquery','form'], function(){//使用jqury 
+        var form=layui.form;   
+        form.on('submit(formDemo)', function(data){
+        console.log(data.elem); //被执行事件的元素DOM对象，一般为button对象
+        console.log(data.form); //被执行提交的form对象，一般在存在form标签时才会返回
+        console.log(data.field); //当前容器的全部表单字段，名值对形式：{name: value}
+        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。********************************
+
+    });
+         $('#tijiao').click(function(){
+             console.log('在这1');
+             $('#createuserid').val($.cookie("loginuid"))//修改input的值 value**************************************
+             console.log("formData0",$('#createtiezihtml')[0]);
+             var formData = new FormData($('#createtiezihtml')[0])
+            //  formData.userid=$.cookie("loginuid");
+             console.log("formData",formData);
+             $.ajax({
+                //  cache:true,
+                processData: false,//这个必须有，不然会报错
+        contentType: false,//这个必须有，不然会报错
+                 type:"POST",
+                 url:"logined/tiezicreate?Authorization="+$.cookie("token"),
+                 data:formData,
+                 error:function(request){//利用回调
+                       console.log('提交后端失败')
+                       alert('帖子创建失败')
+                 },
+                 success:function(data){
+                     console.log('提交后端成功')
+                     alert('帖子创建成功')
+                     location.reload();
+                 }
+             })
+         })
+});
+</script>
+
+
+<script>
+  var x=1;
+  console.log(x)
+  console.log("后面")
+  
+</script> 
+</body>
+</html>

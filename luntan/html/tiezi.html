@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>帖子界面</title>
+  <link href="/home/gua/go/src/luntan/front/layui/css/layui.css" rel="stylesheet">
+</head>
+<body background="http://127.0.0.1:8081/storage/uploads/denim.webp">
+   <h1>  hello</h1>
+   <form enctype="multipart/form-data" class="layui-form" action="" method="post" id="createpinglunhtml" style="display:none">
+    <div class="layui-form-item">
+      <label class="layui-form-label">评论内容</label>
+      <div class="layui-input-block">
+        <input type="text" name="content" required  lay-verify="required" placeholder="请输入你的评论" autocomplete="off" class="layui-input" id="createcontent">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit lay-filter="formDemo" id="tijiao"  >立即提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div>
+  </form>
+<!-- 你的 HTML 代码 -->
+ 
+<script src="/home/gua/go/src/luntan/front/layui/layui.js"></script>
+<script src="/home/gua/go/src/luntan/front/layui/global.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<ul class="layui-nav" lay-filter="">
+  <li class="layui-nav-item"><a href="luntan">返回论坛</a></li>
+</ul>
+<div class="layui-row">
+  <div class="layui-col-md3 layui-col-md-offset6" id="user">
+    <i class="layui-icon layui-icon-user" id="userbiaoshi" style="font-size: 30px;color: #1E9FFF;">user</i>  
+    </div>
+    <div class="layui-col-md3 layui-col-md-offset9" >
+      <button type="button" class="layui-btn" id="guanzhu">一个标准的按钮</button>
+      </div>
+</div>
+<div class="layui-row">
+  <div class="layui-col-md3 layui-col-md-offset9">
+    <button type="button" class="layui-btn" id="dianzan">点赞</button>
+      </div>
+    
+</div>
+<div class="layui-card">
+  <div class="layui-card-header"><h1 style="font-size: 30px; color: #000000;"> 帖子标题</h1></div>
+  <div class="layui-card-body"  id="title">
+    卡片式面板面板通常用于非白色背景色的主体内<br>
+    从而映衬出边框投影
+  </div>
+</div>
+
+
+<div class="layui-card">
+    <div class="layui-card-header"><h1 style="font-size: 30px; color: #0a090f00;"> 帖子内容</h1></div>
+    <div class="layui-card-body"  id="content">
+      卡片式面板面板通常用于非白色背景色的主体内<br>
+      从而映衬出边框投影
+    </div>
+  </div>
+  <div class="layui-card">
+    <div class="layui-card-header"><h1 style="font-size: 30px; color: #000000;"> 评论部分</h1></div>
+    <div class="layui-card-body"  id="pinglun">
+      <button type="button" class="layui-btn" id="createpinglun">创建评论</button>
+    </div>
+  </div>
+  <div class="layui-row">
+    <table id="pinglun" lay-filter="pinglunfilter">
+
+    </table>
+  </div>
+ 
+<script>
+   layui.use(['form'], function(){//使用jqury 
+        var formdata;
+        var form=layui.form; 
+        var jsondata ={
+                ID:$.cookie("nowtiezi")
+        }
+        console.log(jsondata)
+        $.ajax({
+                //  cache:true,
+                 type:"GET",
+                 url:"logined/tiezixiangqing?Authorization="+$.cookie("token"),
+                 data:jsondata,
+                 error:function(request){//利用回调
+                       console.log('提交后端失败')
+                 },
+                 success:function(data){
+                     console.log('提交后端成功',data);
+                     global.tiezidata=data;
+                     console.log(global.tiezidata);
+                     let title =document.getElementById('title');
+                     let content =document.getElementById('content');
+                     let user =document.getElementById('user');
+                     content.innerHTML=global.tiezidata.content;
+                     title.innerHTML=global.tiezidata.title;
+                    //  user.innerHTML='User: '+global.tiezidata.uid;
+                    $("#userbiaoshi").text('User: '+global.tiezidata.uid);//jquery 修改标签内 内容
+                     if(global.tiezidata.photourl!=''){
+                       var newimg=document.createElement('img')
+                       newimg.setAttribute('src',global.tiezidata.photourl)
+                       newimg.setAttribute('height',100)
+                       newimg.setAttribute('width',100)
+                       content.appendChild(newimg)
+                     }
+                 }
+             })
+             //获取关注状态
+             var guanzhugetjson={
+               uid:$.cookie("nowtieziuid"),
+               followid:$.cookie("loginuid"),
+             }
+             console.log(guanzhugetjson)
+             $.ajax({
+                //  cache:true,
+                 type:"GET",
+                 url:"logined/guanzhuget?Authorization="+$.cookie("token"),
+                 data:guanzhugetjson,
+                 error:function(request){//利用回调
+                       console.log('提交后端失败')
+                 },
+                 success:function(data){
+                     console.log('提交后端成功',data);
+                     let guanzhu =document.getElementById('guanzhu');
+                     guanzhu.innerHTML=data.msg
+                 }
+             })
+             //获取点赞状态
+             var dianzangetjson={
+               uid:$.cookie("nowtieziuid"),
+               followid:$.cookie("loginuid"),
+               postid:$.cookie("nowtiezi"),
+             }
+             console.log(guanzhugetjson)
+             $.ajax({
+                //  cache:true,
+                 type:"GET",
+                 url:"logined/dianzanget?Authorization="+$.cookie("token"),
+                 data:dianzangetjson,
+                 error:function(request){//利用回调
+                       console.log('提交后端失败')
+                 },
+                 success:function(data){
+                     console.log('点赞状态提交后端成功',data);
+                     let dianzan =document.getElementById('dianzan');
+                     dianzan.innerHTML=data.msg
+                 }
+             })
+            
+         })
+</script> 
+<script>
+  //关注事件
+  $('#guanzhu').click(function(){
+    alert("click")
+    var guanzhujson={
+      uid:$.cookie("nowtieziuid"),
+      followid:$.cookie("loginuid"),
+    }
+    $.ajax({
+                //  cache:true,
+                 type:"POST",
+                 url:"logined/guanzhu?Authorization="+$.cookie("token"),
+                 data:guanzhujson,
+                 error:function(request){//利用回调
+                       console.log('关注提交后端失败')
+                 },
+                 success:function(data){
+                     console.log('关注提交后端成功',data);
+                     location.reload();
+                 }
+             })
+  })
+</script>
+<script>
+  //点赞事件
+  $('#dianzan').click(function(){
+    alert("点击了点赞")
+    var dianzanjson={
+      uid:$.cookie("nowtieziuid"),
+      followid:$.cookie("loginuid"),
+      postid:$.cookie("nowtiezi"),
+    }
+    $.ajax({
+                //  cache:true,
+                 type:"POST",
+                 url:"logined/dianzan?Authorization="+$.cookie("token"),
+                 data:dianzanjson,
+                 error:function(request){//利用回调
+                       console.log('点赞提交后端失败')
+                 },
+                 success:function(data){
+                     console.log('点赞提交后端成功',data);
+                     location.reload();
+                 }
+             })
+  })
+</script>
+<script>
+  //点击创建评论事件
+  layui.use(['layer'], function(){//使用jqury 
+  var layer=layui.layer
+  $('#createpinglun').click(function(){
+    alert("开始创建评论")
+
+
+layer.open({
+ type:1,
+ area:['500px','600px'],
+  title: '创建评论'
+  ,content: $("#createpinglunhtml"),
+  shade: 0,
+cancel: function(layero,index){ 
+   layer.closeAll();
+  }
+
+}); 
+
+
+  
+  })
+})
+</script>
+<script>
+  //提交创建评论事件
+  layui.use(['form'], function(){
+    var createtiezidata={
+          postid:$.cookie("nowtiezi"),
+          uid:$.cookie("loginuid"),
+          content:"默认",
+        }
+    form=layui.form
+         $('#tijiao').click(function(){
+             alert("提交创建评论事件")
+             var biaodanv=$("#createcontent").val()//js 获取  input的val 因为  用户输入的是value
+             console.log(biaodanv)
+             createtiezidata.content=biaodanv;
+             $.ajax({
+                //  cache:true,
+                 type:"POST",
+                 url:"logined/tiezipingluncreate?Authorization="+$.cookie("token"),
+                 data:createtiezidata,
+                 error:function(request){//利用回调
+                       console.log('提交提交创建评论事件后端失败')
+                 },
+                 success:function(data){
+                     console.log('提交提交创建评论事件后端成功')
+                     location.reload();
+                 }
+             })
+             return false
+         })
+        })
+</script>
+<script>
+  //加载评论
+  layui.use(['table'], function(){
+    var table = layui.table;
+    var tiezipinglundata
+  $(document).ready(function(){
+    var tiezijson={
+      postid:$.cookie("nowtiezi"),
+    }
+    $.ajax({
+                //  cache:true,
+                 type:"GET",
+                 url:"logined/tiezipinglunlist?Authorization="+$.cookie("token"),
+                 data:tiezijson,
+                 error:function(request){//利用回调
+                       console.log('关注提交后端失败')
+                 },
+                 success:function(data){
+                     console.log('关注提交后端成功',data);
+
+                    //  console.log('data.tiezipinglunList[0]',data.tiezipinglunList[0]);
+                     tiezipinglundata=data.tiezipinglunList
+                     console.log('tiezipinglundata',tiezipinglundata)
+                     table.render({
+                 elem: '#pinglun'//绑定html
+              ,height: 700
+        // ,url: '/logined/tiezilist' //数据接口
+               ,data:tiezipinglundata  //
+             ,page: true, //开启分页
+             cols: [[ //表头
+          {field: 'uid', title: '用户ID', width:80, sort: true, fixed: 'left',width:'20%'},
+          {field: 'content', title: '评论', width:80, sort: true, fixed: 'left',width:'20%'},
+        ]],
+      });
+                 }
+             })
+             
+  
+  })
+  
+})
+  
+</script>
+<script>
+  var x=1;
+  console.log(x)
+  console.log("后面")
+  
+</script> 
+</body>
+</html>

@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package microdianzan;
+
+option go_package = "./proto;microdianzan";
+
+service DianzanService {
+	rpc Create(Createequest) returns (CreateResponse) {}
+	rpc Get(Dianzangetrequest) returns (Dianzangetresponse) {}
+	rpc Delete(Dianzandeletrequest) returns (Dianzandeleteresponse) {}
+	rpc Dianzan(DianzanReq) returns (DianzanRsp) {}
+}
+
+
+message Dianzangetrequest {
+	int64 uid=1;
+	int64 followid=2;
+	int64 postid=4;
+
+}
+
+message Dianzangetresponse {
+	int64 uid=1;
+	int64 followid=2;
+	int64 id=3;
+    int64 postid=4;
+	int64 flag=5;
+}
+message Createequest {
+	int64 uid=1;
+	int64 followid=2;
+    int64 postid=4;
+}
+
+message CreateResponse {
+	int64 flag = 1;//是否成功
+}
+
+
+message Dianzandeletrequest {
+	int64 id=1;
+}
+
+message Dianzandeleteresponse {
+	int64 flag=1;
+}
+message DianzanReq{
+	int64 uid=1;
+	int64 followid=2;
+	int64 id=3;
+    int64 postid=4;
+}
+message DianzanRsp{
+	int64 uid=1;
+	int64 followid=2;
+	int64 id=3;
+    int64 postid=4;
+	int64 flag=5;
+}
